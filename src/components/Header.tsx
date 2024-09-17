@@ -1,5 +1,6 @@
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import {NavLink, useLocation} from "react-router-dom"
+import useAppStore from "../stores/useAppStore"
 
 const Header = () => {
 
@@ -7,6 +8,14 @@ const Header = () => {
 
     const isHome = useMemo( () => pathname === "/", [pathname])
 
+    const {categories,fetchCategories} = useAppStore()
+
+    console.log(categories)
+
+    useEffect( ()=>{
+        fetchCategories()
+    },[fetchCategories])
+    
     return (
         <header className={isHome ? "bg-header bg-cover bg-center bg-no-repeat": "bg-slate-800"}>
             <div className="mx-auto container px-5 py-16">
