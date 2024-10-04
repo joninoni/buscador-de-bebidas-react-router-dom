@@ -1,4 +1,4 @@
-import { useEffect ,useState, useMemo, ChangeEvent} from "react"
+import { useEffect ,useState, useMemo, ChangeEvent, FormEvent } from "react"
 import {NavLink, useLocation} from "react-router-dom"
 import useAppStore from "../stores/useAppStore"
 
@@ -14,18 +14,28 @@ const Header = () => {
         ingredient: "",
         category: ""
     })
+
+    const [isEmpty,setIsEmpty] = useState("")
     
     useEffect(()=>{
         fetchCategories()
     },[fetchCategories])
 
     const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) =>{
-        e.preventDefault()
-
         setSearchFilters({
             ...searchFilters,
             [e.target.id] : e.target.value
         })
+    }
+
+    const handleSubmit = (e:FormEvent<HTMLFormElement>) =>{
+        e.preventDefault()
+        if(Object.values(searchFilters).includes("")){
+            setIsEmpty("Todos los campos son obligatorios")
+            return
+        }
+        //reiniciamos la alerta
+        setIsEmpty("")
     }
 
     return (
@@ -59,10 +69,13 @@ const Header = () => {
                 </div>
 
                 {isHome && (
-
                     <form
                         className="bg-orange-400 md:w-1/2 2xl:w-1/3 my-32 rounded-lg shadow space-y-6 p-10"
+                        onSubmit={handleSubmit}
                     >
+
+                    {isEmpty && <p className="text-xl">{isEmpty}</p>}
+
 
                         <div className="space-y-4">
                             <label
@@ -91,7 +104,7 @@ const Header = () => {
                             <select
                                 id="category"
                                 name="category"
-                                value={searchFilters.category   }
+                                value={searchFilters.category}
                                 onChange={handleChange}
                                 className="p-3 w-full rounded-lg focus:outline-none"
                             >
