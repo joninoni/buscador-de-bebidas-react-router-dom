@@ -8,7 +8,7 @@ const Header = () => {
 
     const isHome = useMemo( () => pathname === "/", [pathname])
 
-    const {categories,fetchCategories} = useAppStore()
+    const {categories,fetchCategories,searchRecipies} = useAppStore()
 
     const [searchFilters,setSearchFilters] = useState({
         ingredient: "",
@@ -36,6 +36,8 @@ const Header = () => {
         }
         //reiniciamos la alerta
         setIsEmpty("")
+        //buscamos las recetas
+        searchRecipies(searchFilters)
     }
 
     return (
@@ -74,7 +76,7 @@ const Header = () => {
                         onSubmit={handleSubmit}
                     >
 
-                    {isEmpty && <p className="text-xl">{isEmpty}</p>}
+                    {isEmpty && <p className="text-xl text-orange-700 font-bold">{isEmpty}</p>}
 
 
                         <div className="space-y-4">
