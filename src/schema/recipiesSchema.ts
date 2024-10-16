@@ -15,13 +15,14 @@ export const SearchFilterSchema = z.object({
     category: z.string(),
 })
 
+//schema para validar las bebidas que se usaran para renderizar en DrinkCard
+export const DrinkApiResponseSchema = z.object({
+    idDrink : z.string(),
+    strDrink : z.string(),
+    strDrinkThumb : z.string()
+})
+
 //schema vara validar la respuesta de las categorias de la api
-export const DrinksSchema = z.object({
-    drinks : z.array(
-        z.object({
-            idDrink : z.string(),
-            strDrink : z.string(),
-            strDrinkThumb : z.string()
-        })
-    )
+export const DrinksApiResponseSchema = z.object({
+    drinks : z.array(DrinkApiResponseSchema)
 })
