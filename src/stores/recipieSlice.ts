@@ -1,4 +1,4 @@
-import {StateCreator} from  "zustand"
+import { StateCreator } from "zustand"
 import { getCategories, getCurrencyDrink, getRecipies } from "../services/RecipieService"
 import { Categories, CurrencyDrink, Drink, Drinks, SearchFliter } from "../types"
 
@@ -6,9 +6,11 @@ export type RecipesSliceType = {
     categories : Categories
     drinks : Drinks
     currencyDrink : CurrencyDrink
+    modal : boolean
     fetchCategories: () => Promise<void>
     searchRecipies: (searchFilter : SearchFliter) => Promise<void>
     searchCurrencyDrink: (id : Drink["idDrink"] ) => Promise<void>
+    closeModal : () => void
 }
 
 export const createRecipiesSlice : StateCreator<RecipesSliceType> =  (set) =>({
@@ -36,6 +38,8 @@ export const createRecipiesSlice : StateCreator<RecipesSliceType> =  (set) =>({
         strMeasure6:null,
     },
 
+    modal : false,
+
     fetchCategories : async() =>{
         const categories = await getCategories()
         set({
@@ -51,7 +55,14 @@ export const createRecipiesSlice : StateCreator<RecipesSliceType> =  (set) =>({
     searchCurrencyDrink : async (id) => {
         const currencyDrink = await getCurrencyDrink(id)
         set({
-            currencyDrink
+            currencyDrink,
+            modal : true
+        })
+    },
+    closeModal : ()=>{
+        set({
+            modal : false,
+            currencyDrink : {} as CurrencyDrink
         })
     }
 })
