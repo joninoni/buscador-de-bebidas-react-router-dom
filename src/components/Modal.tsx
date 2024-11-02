@@ -8,6 +8,11 @@ export default function Modal() {
     const modal = useAppStore( state => state.modal)
     const closeModal = useAppStore( state => state.closeModal)
     const currencyDrink = useAppStore( state => state.currencyDrink)
+    //hacia abajo son del slice de favoritos
+    const handleFavorites = useAppStore(state => state.handleFavorites)
+    const favorites = useAppStore(state => state.favorites)
+
+    const favoriteExist = favorites.some(favorite => favorite.idDrink === currencyDrink.idDrink)
 
     const renderIngredients = () =>{
         const ingredients : JSX.Element[] = []
@@ -54,7 +59,7 @@ export default function Modal() {
                             leaveTo="opacity-0 scale-95"
                         >
                             <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6" >
-                                <DialogTitle as="h3" className="text-gray-900 text-4xl      font-extrabold my-5 text-center">
+                                <DialogTitle as="h3" className="text-gray-900 text-4xl font-extrabold my-5 text-center">
                                     {currencyDrink.strDrink}
                                 </DialogTitle>
 
@@ -73,8 +78,11 @@ export default function Modal() {
                                     <p>{currencyDrink.strInstructions}</p>
 
                                     <div className='flex  gap-4'>
-                                        <button className='bg-orange-400 py-5 w-full mt-5 rounded-lg hover:bg-orange-500'>
-                                            Añadir a favoritos
+                                        <button
+                                            className='bg-orange-400 py-5 w-full mt-5 rounded-lg hover:bg-orange-500'
+                                            onClick={ ()=> handleFavorites(currencyDrink)}
+                                        >
+                                           {favoriteExist ? "Eliminar favorito" : "Añadir a favoritos"}
                                         </button>
                                         <button
                                             className='bg-gray-400 py-5 w-full mt-5 rounded-lg'
