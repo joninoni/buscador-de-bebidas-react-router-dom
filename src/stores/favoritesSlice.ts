@@ -5,6 +5,7 @@ import { createRecipiesSlice, RecipesSliceType } from "./recipieSlice"
 export type FavoritesSliceType = {
     favorites : CurrencyDrink[]
     handleFavorites : (drink : CurrencyDrink) => void
+    loadFromStorage: () => void
 }
 
 export const createFavoritesSlice : StateCreator<FavoritesSliceType & RecipesSliceType, [], [], FavoritesSliceType> = (set,get,api) =>( {
@@ -26,5 +27,15 @@ export const createFavoritesSlice : StateCreator<FavoritesSliceType & RecipesSli
         }
         //cierra el modal consumiendo un estado de otro slice
         createRecipiesSlice(set,get,api).closeModal()
+        //guradando en localstorage las recetas
+        localStorage.setItem("favorites",JSON.stringify(get().favorites))
+    },
+    loadFromStorage : () => {
+        const storedFavorites = localStorage.getItem("favorites")
+        if(storedFavorites){
+            set({
+                favorites : JSON.parse(storedFavorites)
+            })
+        }   
     }
-})  
+})
