@@ -8,14 +8,12 @@ const Header = () => {
 
     const isHome = useMemo( () => pathname === "/", [pathname])
 
-    const {categories,fetchCategories,searchRecipies} = useAppStore()
+    const {categories,fetchCategories,searchRecipies,notificacion,showNotification,hideNotification} = useAppStore()//viene del recipieSlice y los ultimos tres de notificationSlice
 
     const [searchFilters,setSearchFilters] = useState({
         ingredient: "",
         category: ""
     })
-
-    const [isEmpty,setIsEmpty] = useState("")
     
     useEffect(()=>{
         fetchCategories()
@@ -31,13 +29,16 @@ const Header = () => {
     const handleSubmit = (e:FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
         if(Object.values(searchFilters).includes("")){
-            setIsEmpty("Todos los campos son obligatorios")
+            showNotification({"error" : true , "text" : "todos los campos son obligatorios"})
             return
         }
-        //reiniciamos la alerta
-        setIsEmpty("")
-        //buscamos las recetas
-        searchRecipies(searchFilters)
+        hideNotification()//reinicia a false el error ¿
+        searchRecipies(searchFilters)  //buscamos las recetas
+        //reinicio el formulario
+        setSearchFilters({
+            ingredient : "",
+            category : "",
+        })
     }
 
     return (
@@ -76,7 +77,7 @@ const Header = () => {
                         onSubmit={handleSubmit}
                     >
 
-                    {isEmpty && <p className="text-xl text-orange-700 font-bold">{isEmpty}</p>}
+                    {notificacion.error ?? <p className="text-xl text-orange-700 font-bold"></p>}
 
 
                         <div className="space-y-4">
