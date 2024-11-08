@@ -47,7 +47,12 @@ const Header = () => {
                 <div className=" flex justify-between items-center">
 
                     <div>
-                        <img className="w-32" src="/logo.svg" alt="logotipo" />
+                        <NavLink
+                            to="/"
+                        >
+                            <img className="w-32" src="/logo.svg" alt="logotipo" />
+                        </NavLink>
+                        
                     </div>
 
                     <nav className="flex flex-col items-center gap-4 md:flex-row">
