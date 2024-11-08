@@ -1,6 +1,7 @@
 import {StateCreator} from "zustand"
 import { CurrencyDrink } from "../types"
 import { createRecipiesSlice, RecipesSliceType } from "./recipieSlice"
+import { createNotificationsSlice, NotificacionSliceType } from "./notificationsSlice"
 
 export type FavoritesSliceType = {
     favorites : CurrencyDrink[]
@@ -8,7 +9,7 @@ export type FavoritesSliceType = {
     loadFromStorage: () => void
 }
 
-export const createFavoritesSlice : StateCreator<FavoritesSliceType & RecipesSliceType, [], [], FavoritesSliceType> = (set,get,api) =>( {
+export const createFavoritesSlice : StateCreator<FavoritesSliceType & RecipesSliceType & NotificacionSliceType, [], [], FavoritesSliceType> = (set,get,api) =>( {
     favorites : [],
     handleFavorites: (drink) => {
         //el metodo get() es muy parecido al state ambos pueden hacer lo mismo en este caso use el get() en lugar de state para que pueda recordar que se puede hacer de diferentes formas
@@ -18,11 +19,19 @@ export const createFavoritesSlice : StateCreator<FavoritesSliceType & RecipesSli
             set({
                 favorites : get().favorites.filter(favorite => favorite.idDrink !== drink.idDrink)
             })
+            createNotificationsSlice(set,get,api).showNotification({
+                "error" : false,
+                "text" : "Se elimino de favoritos"
+            })
         }
         else{
             // no existe la receta en los favoritos
             set({
                 favorites : [...get().favorites,drink]
+            })
+            createNotificationsSlice(set,get,api).showNotification({
+                "error" : false,
+                "text" : "Se agrego a favoritos"
             })
         }
         //cierra el modal consumiendo un estado de otro slice
